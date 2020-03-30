@@ -42,7 +42,7 @@ namespace CosmosNetCoreSqlApi.Controllers
         [HttpGet("{id}")]
         public Task<Contact> Get(string id)
         {
-            return _contactService.GetAsync(id);
+            return _contactService.GetByIdAsync(id);
         }
 
 
@@ -53,6 +53,14 @@ namespace CosmosNetCoreSqlApi.Controllers
             contact.UserId = Guid.Parse("9f8a5487-3acf-4eb9-96cf-6b8b0b8da526");
             await _contactService.AddAsync(contact);
         }
+
+        [HttpGet("filter")]
+        public Task<IEnumerable<Contact>> GetAll(string id)
+        {
+            return _contactService.GetAsync(c => c.Address.Id == Guid.Parse("ace2b055-67ce-473d-ace7-40639d4f07dc"));
+        }
+
+        
 
 
 

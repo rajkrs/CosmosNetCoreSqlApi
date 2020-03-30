@@ -27,7 +27,7 @@ namespace CosmosNetCoreSqlApi.Services
             await DbContainer.DeleteItemAsync<User>(id, new PartitionKey(id));
         }
 
-        public async Task<User> GetAsync(string id)
+        public async Task<User> GetByIdAsync(string id)
         {
             try
             {

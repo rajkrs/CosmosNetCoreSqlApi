@@ -1,11 +1,13 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
+using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace CosmosNetCoreSqlApi.Services
@@ -46,7 +48,17 @@ namespace CosmosNetCoreSqlApi.Services
             }
             return results;
         }
-
+        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> expression)
+        {
+            var setIterator = DbContainer.GetItemLinqQueryable<T>().Where(expression).ToFeedIterator();
+            List<T> results = new List<T>();
+            while (setIterator.HasMoreResults)
+            {
+                var response = await setIterator.ReadNextAsync();
+                results.AddRange(response.ToList());
+            }
+            return results;
+        }
 
 
     }
